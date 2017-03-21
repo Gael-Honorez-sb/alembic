@@ -69,7 +69,7 @@ OPTION(USE_PRMAN "Include PRMan stuff" OFF)
 OPTION(USE_PYALEMBIC "Include PyAlembic stuff" OFF)
 OPTION(USE_STATIC_BOOST "Build with static Boost libs" OFF)
 OPTION(USE_STATIC_HDF5 "Build with static HDF5 libs" OFF)
-OPTION(USE_TESTS "Include Alembic tests" ON)
+OPTION(USE_TESTS "Include Alembic tests" OFF)
 OPTION(ALEMBIC_ILMBASE_LINK_STATIC "IlmBase is a static library" OFF)
 OPTION(ALEMBIC_SHARED_LIBS "Build shared libraries" ON)
 OPTION(ALEMBIC_LIB_USES_BOOST
@@ -219,8 +219,14 @@ IF (ALEMBIC_LIB_USES_BOOST OR USE_PYALEMBIC)
 ENDIF()
 
 # IlmBase
-INCLUDE("./cmake/AlembicIlmBase.cmake")
-INCLUDE_DIRECTORIES(${ALEMBIC_ILMBASE_INCLUDE_DIRECTORY})
+#INCLUDE("./cmake/AlembicIlmBase.cmake")
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/thirdParty/openEXR/IlmBase/Half)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/thirdParty/openEXR/IlmBase/Iex)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/thirdParty/openEXR/IlmBase/IexMath)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/thirdParty/openEXR/IlmBase/IlmThread)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/thirdParty/openEXR/IlmBase/Imath)
+INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/thirdParty/openEXR/IlmBase/config)
+
 
 # HDF5
 IF (USE_HDF5)
@@ -274,39 +280,6 @@ ENDIF()
 #-******************************************************************************
 # BUILD BINARIES
 #-******************************************************************************
-
-# PRMan
-IF (USE_PRMAN)
-    INCLUDE("./cmake/AlembicPRMan.cmake")
-    IF (${ALEMBIC_PRMAN_FOUND})
-        MESSAGE(STATUS "Building PRMan plugins")
-        ADD_SUBDIRECTORY(prman)
-    ELSE()
-        MESSAGE(STATUS "PRMan not found")
-    ENDIF()
-ENDIF()
-
-# Arnold
-IF (USE_ARNOLD)
-    INCLUDE("./cmake/AlembicArnold.cmake")
-    IF (${ALEMBIC_ARNOLD_FOUND})
-        MESSAGE(STATUS "Building Arnold plugins")
-        ADD_SUBDIRECTORY( arnold )
-    ELSE()
-        MESSAGE(STATUS "Arnold not found")
-    ENDIF()
-ENDIF()
-
-# Maya
-IF (USE_MAYA)
-    INCLUDE("./cmake/AlembicMaya.cmake")
-    IF (MAYA_FOUND)
-        MESSAGE(STATUS "Building Maya plugins")
-        ADD_SUBDIRECTORY(maya)
-    ELSE()
-        MESSAGE(STATUS "Maya not found")
-    ENDIF()
-ENDIF()
 
 # Binaries (abcls, abctree, etc)
 IF (USE_BINARIES)
